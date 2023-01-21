@@ -1,7 +1,7 @@
-FROM golang:1.19.3
+# FROM golang:1.19.3
 
 # Mac版
-#FROM arm64v8/golang:1.19.3
+FROM arm64v8/golang:1.19.3
 
 ARG APP_NAME
 
