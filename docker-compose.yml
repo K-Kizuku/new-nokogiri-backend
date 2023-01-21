@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+
+  server:
+    build:
+      context: .
+      args:
+        - APP_NAME=${APP_NAME}
+    container_name: ${APP_NAME}_server
+    hostname: server
+    ports:
+      - 8080:${PORT:-8080}
+    volumes:
+      - .:/go/src/${APP_NAME}
+    env_file:
+      - .env
