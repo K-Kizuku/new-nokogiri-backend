@@ -7,8 +7,9 @@ import (
 
 func InitRouter(app *fiber.App) {
 	app.Use(cors.New())
+	api := app.Group("api/v1")
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	api.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!!!!!!!!!!!!")
 	})
 }
