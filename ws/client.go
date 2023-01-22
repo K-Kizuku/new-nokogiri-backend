@@ -1,9 +1,10 @@
-package websocket
+package ws
 
 import (
-	"encoding/json"
 	"log"
 	"nokogiri-api/db"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -26,11 +27,6 @@ const (
 	// Maximum message size allowed from peer.
 	maxMessageSize = 1024
 )
-
-// var (
-// 	newline = []byte{'\n'}
-// 	space   = []byte{' '}
-// )
 
 var upgrader = websocket.FastHTTPUpgrader{
 	ReadBufferSize:  1024,
@@ -66,31 +62,28 @@ func (c *Client) readPump() {
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		_, message, err := c.conn.ReadMessage()
-		// err := c.conn.ReadJSON(v)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		dat := db.Post{}
-
-		if err := json.Unmarshal(message, &dat); err != nil {
-			log.Printf("error: %v", err)
-		}
-		// data, _ := json.Marshal(&dat)
-		// c.room.broadcast <- []byte(data)
+		slices := strings.Split(string(message), " ")
 		c.room.mu.Lock()
-		c.room.senddata.Room = 1
-		pos := db.Pointer{PointerX: dat.Pos.PointerX, PointerY: dat.Pos.PointerY}
-		c.room.senddata.Pos[c.id] = pos
-		c.room.senddata.Score[c.id] = dat.Score
-		// GenerateQ(c.room.question["test"])
-		c.room.senddata.Question = c.room.question["test"]
-		data, _ := json.Marshal(&c.room.senddata)
+		for i, block := range slices {
+			switch block {
+			case "--M":
+				c.room.broadcast <- []byte("--M" + slices[i+1])
+			case "--O":
+				if c.room.Players[slices[i+1]]++; c.room.Players[slices[i+1]]%10 == 0 {
+					for k, v := range c.room.Players {
+						db.Db.Model(&db.Point{}).Where("id = ?", k).Update("point", strconv.Itoa(v))
+					}
+
+				}
+			}
+		}
 		c.room.mu.Unlock()
-		c.room.broadcast <- []byte(data)
 	}
 }
 

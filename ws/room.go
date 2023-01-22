@@ -1,7 +1,6 @@
-package websocket
+package ws
 
 import (
-	"nokogiri-api/db"
 	"sync"
 )
 
@@ -18,9 +17,9 @@ type Room struct {
 	// Unregister requests from clients.
 	unregister chan *Client
 
-	question map[string][]int
+	Players map[string]int
 
-	senddata db.SendData
+	// senddata db.SendData
 
 	mu sync.Mutex
 }
@@ -31,9 +30,9 @@ func NewRoom() *Room {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
-		question:   map[string][]int{},
-		senddata:   *db.InitSendData(),
-		mu:         sync.Mutex{},
+		Players:    make(map[string]int),
+		// senddata:   *db.InitSendData(),
+		mu: sync.Mutex{},
 	}
 }
 

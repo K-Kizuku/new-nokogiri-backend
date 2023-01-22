@@ -1,17 +1,21 @@
 package db
 
+import (
+	"time"
+)
+
 type Base struct {
-	ID string `gorm:"primaryKey" json:"id" sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	// CreatedAt time.Time `json:"created_at"`
-	// UpdatedAt time.Time `json:"updated_at"`
+	ID        string    `gorm:"primaryKey" json:"id" sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type User struct {
-	// Base
-	Name string `json:"name"`
-	// Email        string `json:"email"`
-	// PasswordHash string `json:"-"`
-	Id string `json:"id"`
+type UserInfo struct {
+	Base
+	Name         string `json:"name"`
+	Email        string `json:"email"`
+	PasswordHash string `json:"-"`
+	Id           string `json:"id"`
 }
 type SignUpUser struct {
 	Name     string `json:"name"`
