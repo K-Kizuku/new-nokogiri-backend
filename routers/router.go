@@ -21,7 +21,7 @@ import (
 
 func InitRouter(app *fiber.App) {
 	app.Use(cors.New())
-	api := app.Group("api/v1")
+	api := app.Group("/api/v1")
 	rooms := make(map[*ws.Room]bool)
 	// room := ws.NewRoom()
 
