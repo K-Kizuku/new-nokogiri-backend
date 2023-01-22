@@ -15,5 +15,5 @@ func main() {
 	db.InitDB()
 	routers.InitRouter(app)
 
-	log.Fatal(app.Listen(":8081"))
+	log.Fatal(app.Listen(":8080"))
 }
