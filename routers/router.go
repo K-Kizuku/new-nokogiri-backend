@@ -62,7 +62,6 @@ func InitRouter(app *fiber.App) {
 	})
 
 	app.Post("/temp", func(c *fiber.Ctx) error {
-		// p := new(db.PostPlayer)
 
 		// if err := c.BodyParser(p); err != nil {
 		//     return err
