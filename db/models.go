@@ -37,6 +37,13 @@ type JWTInfo struct {
 	JWT string `json:"jwt"`
 }
 
+type Room struct {
+	Room        string
+	Id1         string
+	Id2         string
+	IsStreaming bool
+}
+
 type Point struct {
 	Id    string `json:"id"`
 	Point string `json:"point"`

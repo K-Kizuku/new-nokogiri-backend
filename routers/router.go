@@ -15,12 +15,14 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/websocket/v2"
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 func InitRouter(app *fiber.App) {
 	app.Use(cors.New())
 	api := app.Group("api/v1")
+	rooms := make(map[*ws.Room]bool)
 	room := ws.NewRoom()
 
 	api.Get("/", func(c *fiber.Ctx) error {
@@ -47,6 +49,18 @@ func InitRouter(app *fiber.App) {
 		return fiber.ErrUpgradeRequired
 	})
 
+	api.Post(("/gamestart"), func(c *fiber.Ctx) error {
+		payload := c.Body()
+		slices := strings.Split(string(payload), " ")
+		u, _ := uuid.NewRandom()
+		store := db.Room{Room: u.String(), Id1: slices[1], Id2: slices[3], IsStreaming: true}
+		db.Db.Select("room", "id1", "id2", "isStreaming").Create(&store)
+		// db.Db.Select("id","name").Create()
+		// rooms[c.Body()]=true
+		rooms[ws.NewRoom()] = true
+		return c.SendString(u.String())
+	})
+
 	app.Post("/temp", func(c *fiber.Ctx) error {
 		// p := new(db.PostPlayer)
 
@@ -61,7 +75,9 @@ func InitRouter(app *fiber.App) {
 		// ...
 	})
 
-	app.Get("/ws/:id", room.ServeWs)
+	// app.Get("/ws/:id", room.ServeWs())
+	// app.Get("/ws/:id", room.ServeWs())
+
 	// api.Post("/signUp", func(c *fiber.Ctx) error {
 	// 	cruds.CreateUser()
 	// })

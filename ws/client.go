@@ -73,8 +73,10 @@ func (c *Client) readPump() {
 		for i, block := range slices {
 			switch block {
 			case "--M":
+				log.Printf("--M: %v", slices[1+i])
 				c.room.broadcast <- []byte("--M" + slices[i+1])
 			case "--O":
+				log.Printf("--O: %v", slices[1+i])
 				if c.room.Players[slices[i+1]]++; c.room.Players[slices[i+1]]%10 == 0 {
 					for k, v := range c.room.Players {
 						db.Db.Model(&db.Point{}).Where("id = ?", k).Update("point", strconv.Itoa(v))
@@ -134,9 +136,9 @@ func (c *Client) writePump() {
 	}
 }
 
-func (room *Room) ServeWs(ctx *fiber.Ctx) error {
+func (room *Room) ServeWs(ctx *fiber.Ctx, u uuid.UUID) error {
 	err := upgrader.Upgrade(ctx.Context(), func(conn *websocket.Conn) {
-		u, _ := uuid.NewRandom()
+		// u, _ := uuid.NewRandom()
 		client := &Client{room: room, conn: conn, send: make(chan []byte, 512), id: u.String()}
 		client.room.register <- client
 		log.Println("tets")
