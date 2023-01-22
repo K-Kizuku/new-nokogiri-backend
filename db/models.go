@@ -61,6 +61,11 @@ type SendData struct {
 	Pos      map[string]Pointer `json:"pos"`
 }
 
+type PostPlayer struct {
+	Player1 map[string]string `json:"player1"`
+	Player2 map[string]string `json:"player2"`
+}
+
 func InitSendData() *SendData {
 	return &SendData{
 		Question: make([]int, 10),

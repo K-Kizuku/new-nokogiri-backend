@@ -47,6 +47,20 @@ func InitRouter(app *fiber.App) {
 		return fiber.ErrUpgradeRequired
 	})
 
+	app.Post("/temp", func(c *fiber.Ctx) error {
+		// p := new(db.PostPlayer)
+
+		// if err := c.BodyParser(p); err != nil {
+		//     return err
+		// }
+
+		// log.Println(p.Player1) // john
+		// log.Println(p.Player2) // doe
+
+		return c.Send(c.Body())
+		// ...
+	})
+
 	app.Get("/ws/:id", room.ServeWs)
 	// api.Post("/signUp", func(c *fiber.Ctx) error {
 	// 	cruds.CreateUser()
