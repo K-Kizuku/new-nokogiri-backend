@@ -23,7 +23,7 @@ func InitRouter(app *fiber.App) {
 	app.Use(cors.New())
 	api := app.Group("api/v1")
 	rooms := make(map[*ws.Room]bool)
-	room := ws.NewRoom()
+	// room := ws.NewRoom()
 
 	api.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!!!!!!!!!!!!")
