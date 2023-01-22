@@ -24,8 +24,8 @@ func InitDB() (err error) {
 		return
 	}
 
-	if err = Db.AutoMigrate(&UserInfo{}, &Post{}); err != nil {
-		return
-	}
+	// if err = Db.AutoMigrate(&UserInfo{}, &Post{}); err != nil {
+	// 	return
+	// }
 	return
 }
